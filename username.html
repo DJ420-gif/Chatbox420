@@ -351,11 +351,9 @@
   }
   [thing1, thing2, thing3].forEach(f => f.addEventListener('input', checkFields));
 
-  const suffixes = ['always', 'forever', 'onlyyours', 'endlessly', 'starlight', 'everdear', 'nowandalways'];
 
   function generateUsername(){
-    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-    return 'Queen' + suffix;
+    return 'Queen' ;
   }
 
   const heartColors = ['#e88fae', '#c79a56', '#fbe0e9', '#d46a85'];
