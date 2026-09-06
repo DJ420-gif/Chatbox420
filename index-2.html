@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatBox DJ420 — For Sneha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fff7f3;
+    --cream-deep:#fdeee6;
+    --wine:#6e1e39;
+    --plum:#2b0f1c;
+    --rose:#c9527b;
+    --rose-soft:#e8a2b8;
+    --gold:#c79a56;
+    --gold-soft:#e6cd9a;
+    --line:#f1c6d2;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    overflow-x:hidden;
+  }
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 900px 600px at 15% 10%, #fbe0e9 0%, transparent 60%),
+      radial-gradient(ellipse 900px 700px at 90% 90%, #f7dcd1 0%, transparent 55%),
+      var(--cream);
+    font-family:'Jost', sans-serif;
+    color:var(--plum);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 20px;
+    position:relative;
+  }
+
+  /* soft floating petals in the background */
+  .petal{
+    position:fixed;
+    top:-40px;
+    width:14px;
+    height:14px;
+    background:var(--rose-soft);
+    border-radius:0 60% 0 60%;
+    opacity:.55;
+    pointer-events:none;
+    animation-name:fall;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+    z-index:0;
+  }
+  @keyframes fall{
+    0%{transform:translateY(0) rotate(0deg);}
+    100%{transform:translateY(110vh) rotate(300deg);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .petal{display:none;}
+  }
+
+  .card{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:560px;
+    background:#fffcfa;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:56px 44px 48px;
+    box-shadow:0 30px 70px -30px rgba(110,30,57,0.25), inset 0 0 0 1px rgba(199,154,86,0.12);
+    text-align:center;
+  }
+
+  .ornament{
+    width:34px;
+    height:34px;
+    margin:0 auto 22px;
+    color:var(--gold);
+  }
+
+  .kicker{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.05rem;
+    color:var(--rose);
+    letter-spacing:.03em;
+    margin:0 0 6px;
+  }
+
+  h1{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:clamp(2.2rem, 6vw, 3rem);
+    line-height:1.1;
+    margin:0 0 22px;
+    color:var(--wine);
+  }
+
+  .rule{
+    width:64px;
+    height:1px;
+    background:var(--gold);
+    margin:0 auto 26px;
+  }
+
+  p.letter{
+    font-size:1.02rem;
+    line-height:1.75;
+    color:#4a2333;
+    margin:0 0 18px;
+    text-align:left;
+  }
+
+  .question{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.35rem;
+    line-height:1.5;
+    color:var(--wine);
+    margin:30px 0 8px;
+  }
+
+  .status-line{
+    min-height:22px;
+    font-size:.88rem;
+    letter-spacing:.02em;
+    color:var(--rose);
+    margin:0 0 26px;
+    transition:opacity .2s ease;
+  }
+
+  .btn-field{
+    position:relative;
+    height:150px;
+    margin-top:6px;
+  }
+
+  .btn-row{
+    display:flex;
+    gap:18px;
+    justify-content:center;
+    align-items:center;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+  }
+
+  button{
+    font-family:'Jost', sans-serif;
+    font-size:1rem;
+    letter-spacing:.02em;
+    padding:14px 30px;
+    border-radius:3px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+
+  #yesBtn{
+    background:var(--wine);
+    color:var(--cream);
+    box-shadow:0 10px 24px -10px rgba(110,30,57,0.55);
+  }
+  #yesBtn:hover{transform:translateY(-2px);}
+  #yesBtn.settled{
+    animation:settle .5s ease;
+  }
+  @keyframes settle{
+    0%{transform:scale(.9);}
+    60%{transform:scale(1.05);}
+    100%{transform:scale(1);}
+  }
+
+  #noBtn{
+    background:transparent;
+    color:var(--wine);
+    border-color:var(--rose-soft);
+  }
+  #noBtn:hover{background:var(--cream-deep);}
+
+  #yesBtn.dodging{
+    position:fixed;
+    z-index:5;
+  }
+
+  .shayari-rule{
+    width:64px;
+    height:1px;
+    background:var(--gold);
+    margin:38px auto 22px;
+  }
+
+  .shayari{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--wine);
+    font-size:1.15rem;
+    line-height:1.85;
+    margin:0 0 8px;
+  }
+
+  .shayari-placeholder{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--rose-soft);
+    font-size:.85rem;
+    line-height:1.4;
+    margin:0 0 8px;
+  }
+
+  .shayari-note{
+    font-size:.82rem;
+    color:var(--rose-soft);
+    font-style:italic;
+    margin:0;
+  }
+
+  footer{
+    margin-top:22px;
+    font-size:.78rem;
+    color:var(--rose-soft);
+    letter-spacing:.04em;
+  }
+
+  /* ---------- celebration overlay ---------- */
+  .celebration{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .8s ease;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 42%, #7c2745 0%, #5c1730 45%, #350c1c 100%);
+  }
+  .celebration.active{
+    opacity:1;
+    pointer-events:all;
+  }
+
+  .glow{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:60vmax;
+    height:60vmax;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(231,181,143,0.28) 0%, transparent 70%);
+    animation:pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:.6; transform:translate(-50%,-50%) scale(1);}
+    50%{opacity:1; transform:translate(-50%,-50%) scale(1.12);}
+  }
+
+  .heart-field{
+    position:absolute;
+    inset:0;
+  }
+
+  .heart{
+    position:absolute;
+    top:-8vh;
+    width:16px;
+    height:16px;
+    transform:rotate(-45deg);
+    opacity:0;
+    animation-name:heartFall;
+    animation-timing-function:ease-in;
+    animation-iteration-count:infinite;
+  }
+  .heart::before,
+  .heart::after{
+    content:'';
+    position:absolute;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:inherit;
+  }
+  .heart::before{ top:-8px; left:0; }
+  .heart::after{ left:8px; top:0; }
+
+  @keyframes heartFall{
+    0%{ transform:translate(0, 0) rotate(-45deg) scale(0.6); opacity:0; }
+    8%{ opacity:1; }
+    50%{ transform:translate(var(--drift), 55vh) rotate(-45deg) scale(1); }
+    90%{ opacity:.85; }
+    100%{ transform:translate(calc(var(--drift) * 1.6), 118vh) rotate(-45deg) scale(0.8); opacity:0; }
+  }
+
+  .celebration-content{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:0 24px;
+  }
+
+  .celebration-line{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--cream);
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  .celebration-line.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  #celebLine1{
+    font-size:clamp(2rem, 7vw, 3.2rem);
+    font-weight:600;
+    margin:0 0 14px;
+  }
+  #celebLine2{
+    font-size:clamp(1.05rem, 3vw, 1.35rem);
+    max-width:420px;
+    line-height:1.6;
+    margin:0 0 34px;
+    color:var(--gold-soft);
+  }
+
+  #enterChatBtn{
+    font-family:'Jost', sans-serif;
+    font-size:1rem;
+    letter-spacing:.03em;
+    padding:15px 34px;
+    border-radius:3px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--cream);
+    cursor:pointer;
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity .9s ease, transform .9s ease, background .2s ease, color .2s ease;
+  }
+  #enterChatBtn.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+  #enterChatBtn:hover{
+    background:var(--gold);
+    color:var(--plum);
+  }
+
+  @media (max-width:480px){
+    .card{padding:44px 24px 40px;}
+    p.letter{font-size:.97rem;}
+  }
+
+  /* ---------- write-something popup (after 4th dodge) ---------- */
+  .prompt-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(43,15,28,0.55);
+    backdrop-filter:blur(2px);
+    z-index:200;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .35s ease;
+    padding:20px;
+  }
+  .prompt-overlay.active{
+    opacity:1;
+    pointer-events:all;
+  }
+
+  .prompt-box{
+    position:relative;
+    width:100%;
+    max-width:300px;
+    background:#fffcfa;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:24px 22px 20px;
+    box-shadow:0 20px 50px -20px rgba(43,15,28,0.5);
+    text-align:center;
+    transform:translateY(10px) scale(.97);
+    transition:transform .35s ease;
+  }
+  .prompt-overlay.active .prompt-box{
+    transform:translateY(0) scale(1);
+  }
+
+  .prompt-title{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-weight:600;
+    color:var(--wine);
+    font-size:1.15rem;
+    margin:4px 0 8px;
+  }
+
+  .prompt-body{
+    font-size:.82rem;
+    line-height:1.55;
+    color:#4a2333;
+    margin:0 0 14px;
+  }
+
+  #promptInput{
+    width:100%;
+    resize:none;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:10px 12px;
+    font-family:'Jost', sans-serif;
+    font-size:.88rem;
+    color:var(--plum);
+    background:var(--cream);
+    outline:none;
+    transition:border-color .2s ease;
+  }
+  #promptInput:focus{
+    border-color:var(--rose-soft);
+  }
+
+  #promptSubmit{
+    margin-top:14px;
+    background:var(--wine);
+    color:var(--cream);
+    font-size:.88rem;
+    padding:10px 24px;
+    border-radius:18px;
+    box-shadow:0 8px 18px -10px rgba(110,30,57,0.55);
+  }
+  #promptSubmit:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+    box-shadow:none;
+  }
+
+  /* ---------- corner reply button + panel ---------- */
+  .note-fab{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:60;
+    background:var(--wine);
+    color:var(--cream);
+    font-family:'Jost', sans-serif;
+    font-size:.8rem;
+    letter-spacing:.02em;
+    padding:10px 18px;
+    border-radius:20px;
+    border:none;
+    cursor:pointer;
+    box-shadow:0 10px 22px -10px rgba(110,30,57,0.55);
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .4s ease, transform .4s ease, background .18s ease;
+    pointer-events:none;
+  }
+  .note-fab.show{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:all;
+  }
+  .note-fab:hover{
+    background:#5a1830;
+  }
+
+  .note-panel{
+    position:fixed;
+    right:18px;
+    bottom:64px;
+    z-index:61;
+    width:230px;
+    max-height:200px;
+    overflow-y:auto;
+    background:#fffcfa;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 16px 14px;
+    box-shadow:0 20px 45px -20px rgba(43,15,28,0.45);
+    opacity:0;
+    transform:translateY(8px) scale(.97);
+    pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .note-panel.open{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:all;
+  }
+
+  .note-panel-close{
+    position:absolute;
+    top:6px;
+    right:9px;
+    background:none;
+    border:none;
+    color:var(--rose-soft);
+    font-size:1.05rem;
+    line-height:1;
+    padding:4px;
+    cursor:pointer;
+  }
+
+  .note-panel-title{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--rose);
+    font-size:.85rem;
+    margin:0 0 8px;
+  }
+
+  .note-panel-text{
+    font-size:.85rem;
+    line-height:1.55;
+    color:var(--plum);
+    margin:0;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    text-align:left;
+  }
+
+  @media (max-width:480px){
+    .note-panel{width:calc(100vw - 36px); right:18px;}
+  }
+
+  /* ---------- tiny top-right code box ---------- */
+  .code-box{
+    position:fixed;
+    top:14px;
+    right:14px;
+    z-index:300;
+  }
+  #codeInput{
+    width:58px;
+    padding:6px 9px;
+    font-family:'Jost', sans-serif;
+    font-size:.75rem;
+    text-align:center;
+    letter-spacing:.06em;
+    color:var(--rose-soft);
+    background:rgba(255,252,250,0.55);
+    border:1px solid var(--line);
+    border-radius:12px;
+    outline:none;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  #codeInput:focus{
+    border-color:var(--rose-soft);
+    color:var(--wine);
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs></defs>
+</svg>
+
+<div id="siteRoot">
+
+<div class="card">
+  <svg class="ornament" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17 27C17 27 4 19.5 4 11.5C4 7.35 7.13 4 11 4C13.5 4 15.7 5.4 17 7.5C18.3 5.4 20.5 4 23 4C26.87 4 30 7.35 30 11.5C30 19.5 17 27 17 27Z" stroke="#c79a56" stroke-width="1.2"/>
+  </svg>
+
+  <p class="kicker">ChatBox DJ420</p>
+  <h1>For you, Sneha.<br>Especially for you.</h1>
+  <div class="rule"></div>
+
+  <p class="letter">
+    Some conversations are just noise passing through. Ours never were. Every late reply, every random thought
+    I sent your way at the wrong hour, every ordinary sentence that somehow wasn't ordinary when it was to you —
+    it all quietly led here, to me finally asking you this properly.
+  </p>
+  <p class="letter">
+    So here's the question I built this whole little page just to ask.
+  </p>
+
+  <p class="question">Will you promise we keep talking — through every ordinary day, every bad mood,<br>every year from now, till we're old — <em>till we die?</em></p>
+
+  <p class="status-line" id="statusLine">&nbsp;</p>
+
+  <div class="btn-field" id="btnField">
+    <div class="btn-row">
+      <button id="yesBtn">Yes, always</button>
+      <button id="noBtn">No</button>
+    </div>
+  </div>
+
+  <div class="shayari-rule"></div>
+  <p class="shayari-placeholder" id="shayariSlot">(your shayari goes here)</p>
+
+  <footer>a small page, built for one person</footer>
+</div>
+
+<div class="celebration" id="celebration">
+  <div class="glow"></div>
+  <div class="heart-field" id="heartField"></div>
+  <div class="celebration-content">
+    <p class="celebration-line" id="celebLine1">You said yes.</p>
+    <p class="celebration-line" id="celebLine2">We're ready to talk now — today, and every ordinary day after this one.</p>
+    <button id="enterChatBtn">Enter the chat</button>
+  </div>
+</div>
+
+<div class="prompt-overlay" id="promptOverlay">
+  <div class="prompt-box">
+    <p class="prompt-title">Wait, before that—</p>
+    <p class="prompt-body">Say something. Anything about us talking every day, about now, about whatever's on your mind.</p>
+    <textarea id="promptInput" rows="3" maxlength="240" placeholder="write a little something..."></textarea>
+    <button id="promptSubmit" disabled>Save it</button>
+  </div>
+</div>
+
+<button class="note-fab" id="noteFab">read her note</button>
+
+<div class="note-panel" id="notePanel">
+  <button class="note-panel-close" id="notePanelClose" aria-label="close">&times;</button>
+  <p class="note-panel-title">what she wrote</p>
+  <p class="note-panel-text" id="notePanelText"></p>
+</div>
+
+</div><!-- /siteRoot -->
+
+<div class="code-box">
+  <input type="text" id="codeInput" maxlength="3" inputmode="numeric" placeholder="code" autocomplete="off">
+</div>
+
+<script>
+  const siteRoot = document.getElementById('siteRoot');
+  const ORIGINAL_HTML = siteRoot.innerHTML;
+  let disguised = false;
+
+  function initGame(){
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const statusLine = document.getElementById('statusLine');
+    const celebration = document.getElementById('celebration');
+    const heartField = document.getElementById('heartField');
+    const celebLine1 = document.getElementById('celebLine1');
+    const celebLine2 = document.getElementById('celebLine2');
+    const enterChatBtn = document.getElementById('enterChatBtn');
+
+    const promptOverlay = document.getElementById('promptOverlay');
+    const promptInput = document.getElementById('promptInput');
+    const promptSubmit = document.getElementById('promptSubmit');
+    const noteFab = document.getElementById('noteFab');
+    const notePanel = document.getElementById('notePanel');
+    const notePanelClose = document.getElementById('notePanelClose');
+    const notePanelText = document.getElementById('notePanelText');
+
+    const REQUIRED_DODGES = 5;
+    const NOTE_PROMPT_AT = 4;
+    let dodgeCount = 0;
+    let settled = false;
+    let notePromptShown = false;
+
+    const dodgeLines = [
+      "Not that easy.",
+      "Try again.",
+      "Almost had it.",
+      "Come on, keep going.",
+      "One more try."
+    ];
+
+    const noLines = [
+      "That's not an option today.",
+      "Try the other one.",
+      "Really? Look again.",
+      "I'll wait."
+    ];
+
+    function randomPointInViewport(rect){
+      const margin = 16;
+      const maxX = window.innerWidth - rect.width - margin;
+      const maxY = window.innerHeight - rect.height - margin;
+      const x = Math.max(margin, Math.random() * maxX);
+      const y = Math.max(margin, Math.random() * maxY);
+      return {x, y};
+    }
+
+    function dodge(){
+      const rect = yesBtn.getBoundingClientRect();
+      const {x, y} = randomPointInViewport(rect);
+
+      if (!yesBtn.classList.contains('dodging')){
+        yesBtn.classList.add('dodging');
+      }
+      yesBtn.style.left = x + 'px';
+      yesBtn.style.top = y + 'px';
+
+      dodgeCount++;
+      const line = dodgeLines[Math.min(dodgeCount - 1, dodgeLines.length - 1)];
+      statusLine.textContent = line;
+
+      if (dodgeCount === NOTE_PROMPT_AT && !notePromptShown){
+        notePromptShown = true;
+        openPromptPopup();
+        return;
+      }
+
+      if (dodgeCount >= REQUIRED_DODGES){
+        settled = true;
+        statusLine.textContent = "Alright — you've earned this one. Go ahead.";
+        yesBtn.classList.add('settled');
+      }
+    }
+
+    const NOTE_KEY = 'dj420_note';
+
+    function openPromptPopup(){
+      promptOverlay.classList.add('active');
+      setTimeout(() => promptInput.focus(), 350);
+    }
+
+    function closePromptPopup(){
+      promptOverlay.classList.remove('active');
+    }
+
+    function saveNote(text){
+      try { localStorage.setItem(NOTE_KEY, text); } catch (e) {}
+      notePanelText.textContent = text;
+      noteFab.classList.add('show');
+    }
+
+    promptInput.addEventListener('input', function(){
+      promptSubmit.disabled = promptInput.value.trim().length === 0;
+    });
+
+    promptSubmit.addEventListener('click', function(){
+      const text = promptInput.value.trim();
+      if (!text) return;
+      saveNote(text);
+      closePromptPopup();
+    });
+
+    noteFab.addEventListener('click', function(){
+      notePanel.classList.toggle('open');
+    });
+
+    notePanelClose.addEventListener('click', function(){
+      notePanel.classList.remove('open');
+    });
+
+    // restore a previously saved note if the page is reopened
+    (function restoreNote(){
+      let saved = null;
+      try { saved = localStorage.getItem(NOTE_KEY); } catch (e) {}
+      if (saved){
+        notePanelText.textContent = saved;
+        noteFab.classList.add('show');
+      }
+    })();
+
+    function tryDodge(e){
+      if (settled) return;
+      e.preventDefault();
+      dodge();
+    }
+
+    const heartColors = ['#e88fae', '#c79a56', '#fbe0e9', '#d46a85'];
+    let heartTimer = null;
+
+    function spawnCelebHeart(){
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      const size = 10 + Math.random() * 16;
+      heart.style.width = size + 'px';
+      heart.style.height = size + 'px';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.background = heartColors[Math.floor(Math.random() * heartColors.length)];
+      const duration = 4 + Math.random() * 3.5;
+      heart.style.animationDuration = duration + 's';
+      heart.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
+      heartField.appendChild(heart);
+      setTimeout(() => heart.remove(), duration * 1000);
+    }
+
+    function succeed(){
+      celebration.classList.add('active');
+
+      // start a steady stream of falling hearts
+      for (let i = 0; i < 18; i++){
+        setTimeout(spawnCelebHeart, i * 90);
+      }
+      heartTimer = setInterval(spawnCelebHeart, 160);
+
+      // staggered romantic text reveal
+      setTimeout(() => celebLine1.classList.add('show'), 500);
+      setTimeout(() => celebLine2.classList.add('show'), 1400);
+      setTimeout(() => enterChatBtn.classList.add('show'), 2300);
+    }
+
+    enterChatBtn.addEventListener('click', function(){
+      if (heartTimer) clearInterval(heartTimer);
+      enterChatBtn.disabled = true;
+      enterChatBtn.textContent = 'Opening…';
+      setTimeout(() => {
+        window.location.href = 'username.html';
+      }, 400);
+    });
+
+    // Desktop: dodge on hover before it's earned
+    yesBtn.addEventListener('mouseenter', function(e){
+      if (!settled){
+        tryDodge(e);
+      }
+    });
+
+    // Both desktop and mobile: click
+    yesBtn.addEventListener('click', function(e){
+      if (!settled){
+        tryDodge(e);
+      } else {
+        succeed();
+      }
+    });
+
+    // Touch devices fire click without hover, this covers it.
+    yesBtn.addEventListener('touchstart', function(e){
+      if (!settled){
+        e.preventDefault();
+        dodge();
+      }
+    }, {passive:false});
+
+    let noClicks = 0;
+    noBtn.addEventListener('click', function(){
+      statusLine.textContent = noLines[Math.min(noClicks, noLines.length - 1)];
+      noClicks++;
+    });
+
+    // Keep the settled button within viewport on resize
+    window.addEventListener('resize', function(){
+      if (yesBtn.classList.contains('dodging')){
+        const rect = yesBtn.getBoundingClientRect();
+        const x = Math.min(rect.left, window.innerWidth - rect.width - 16);
+        const y = Math.min(rect.top, window.innerHeight - rect.height - 16);
+        yesBtn.style.left = Math.max(16, x) + 'px';
+        yesBtn.style.top = Math.max(16, y) + 'px';
+      }
+    });
+  }
+
+  initGame();
+
+  // gentle falling petals (paused while the disguise is active)
+  function spawnPetal(){
+    if (disguised) return;
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.style.left = Math.random() * 100 + 'vw';
+    const duration = 9 + Math.random() * 8;
+    petal.style.animationDuration = duration + 's';
+    petal.style.opacity = 0.3 + Math.random() * 0.4;
+    const size = 8 + Math.random() * 10;
+    petal.style.width = size + 'px';
+    petal.style.height = size + 'px';
+    document.body.appendChild(petal);
+    setTimeout(() => petal.remove(), duration * 1000);
+  }
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    for (let i = 0; i < 6; i++){
+      setTimeout(spawnPetal, i * 1200);
+    }
+    setInterval(spawnPetal, 1800);
+  }
+
+  /* ---------- tiny top-right code box: swap / restore the whole page ---------- */
+  const codeInput = document.getElementById('codeInput');
+  const ALT_PAGE_URL = 'alt-page.html';
+
+  function clearPetals(){
+    document.querySelectorAll('.petal').forEach(p => p.remove());
+  }
+
+  function runScriptsIn(container){
+    container.querySelectorAll('script').forEach(oldScript => {
+      const newScript = document.createElement('script');
+      for (const attr of oldScript.attributes){
+        newScript.setAttribute(attr.name, attr.value);
+      }
+      newScript.textContent = oldScript.textContent;
+      oldScript.replaceWith(newScript);
+    });
+  }
+
+  async function swapSite(){
+    try{
+      const res = await fetch(ALT_PAGE_URL, {cache:'no-store'});
+      if (!res.ok) throw new Error('fetch failed');
+      const html = await res.text();
+      const parsed = new DOMParser().parseFromString(html, 'text/html');
+      disguised = true;
+      clearPetals();
+      siteRoot.innerHTML = parsed.body.innerHTML;
+      runScriptsIn(siteRoot);
+    } catch (err){
+      console.warn('Could not load ' + ALT_PAGE_URL + ' — make sure it exists in the same folder and the site is served over http(s).');
+    }
+  }
+
+  function restoreSite(){
+    disguised = false;
+    siteRoot.innerHTML = ORIGINAL_HTML;
+    initGame();
+  }
+
+  codeInput.addEventListener('input', function(){
+    const val = codeInput.value.trim();
+    if (val === '420'){
+      codeInput.value = '';
+      codeInput.blur();
+      swapSite();
+    } else if (val === '024'){
+      codeInput.value = '';
+      codeInput.blur();
+      restoreSite();
+    }
+  });
+</script>
+
+</body>
+</html>
