@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChatBox DJ420 — Almost there</title>
+<title>ChatBox DJ420 — Almost there*</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -522,7 +522,7 @@
   </div>
 </div>
 
-<script type="module">
+  <script type="module">
 
   // =========================
   // FIREBASE
@@ -536,16 +536,18 @@
     push
   } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDdtOwgFhAfS5E-aw00dp7h-C7552GsRG8",
-  authDomain: "demochat-e3af0.firebaseapp.com",
-  databaseURL: "https://demochat-e3af0-default-rtdb.firebaseio.com",
-  projectId: "demochat-e3af0",
-  storageBucket: "demochat-e3af0.firebasestorage.app",
-  messagingSenderId: "17814560981",
-  appId: "1:17814560981:web:627faf365da20d9707425c",
-  measurementId: "G-EJ4EMNSJZ2"
-};
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdtOwgFhAfS5E-aw00dp7h-C7552GsRG8",
+    authDomain: "demochat-e3af0.firebaseapp.com",
+    databaseURL: "https://demochat-e3af0-default-rtdb.firebaseio.com",
+    projectId: "demochat-e3af0",
+    storageBucket: "demochat-e3af0.firebasestorage.app",
+    messagingSenderId: "17814560981",
+    appId: "1:17814560981:web:627faf365da20d9707425c",
+    measurementId: "G-EJ4EMNSJZ2"
+  };
+
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
@@ -582,7 +584,7 @@ const firebaseConfig = {
       thing2,
       thing3
     ].every(
-      f => f.value.trim().length > 0
+      f => f && f.value.trim().length > 0
     );
 
     unlockBtn.disabled = !filled;
@@ -621,6 +623,8 @@ const firebaseConfig = {
 
 
   function spawnCelebHeart() {
+
+    if (!heartField) return;
 
     const heart =
       document.createElement('div');
@@ -671,7 +675,7 @@ const firebaseConfig = {
 
 
   // =========================
-  // UNLOCK + SAVE TO FIREBASE
+  // UNLOCK + SAVE
   // =========================
 
   unlockBtn.addEventListener(
@@ -700,7 +704,10 @@ const firebaseConfig = {
 
       try {
 
-        // Firebase path
+        // =========================
+        // SAVE TO FIREBASE
+        // =========================
+
         const answersRef =
           ref(
             db,
@@ -708,36 +715,43 @@ const firebaseConfig = {
           );
 
 
-        // Save the three answers
         await push(
           answersRef,
           {
             user: 'Queen',
-
             thing1: answers[0],
-
             thing2: answers[1],
-
             thing3: answers[2],
-
             timestamp: Date.now()
           }
         );
 
 
         // =========================
+        // FIREBASE SUCCESS
+        // =========================
+
+        console.log(
+          'Firebase save successful!'
+        );
+
+
+        // =========================
         // SHOW CELEBRATION
         // =========================
-console.log("Saved successfully");
-  
+
         generatedUsername =
           generateUsername();
 
 
-        celebration.classList.add(
-          'active'
-        );
+        if (celebration) {
+          celebration.classList.add(
+            'active'
+          );
+        }
 
+
+        // Hearts
 
         for (
           let i = 0;
@@ -760,61 +774,91 @@ console.log("Saved successfully");
           );
 
 
+        // First line
+
         setTimeout(
           () => {
-            celebLine1.classList.add(
-              'show'
-            );
+
+            if (celebLine1) {
+              celebLine1.classList.add(
+                'show'
+              );
+            }
+
           },
           500
         );
 
 
+        // Second line
+
         setTimeout(
           () => {
-            celebLine2.classList.add(
-              'show'
-            );
+
+            if (celebLine2) {
+              celebLine2.classList.add(
+                'show'
+              );
+            }
+
           },
           1400
         );
 
 
+        // Username
+
         setTimeout(
           () => {
 
-            usernameReveal.textContent =
-              generatedUsername;
+            if (usernameReveal) {
 
-            usernameReveal.classList.add(
-              'show'
-            );
+              usernameReveal.textContent =
+                generatedUsername;
+
+              usernameReveal.classList.add(
+                'show'
+              );
+
+            }
 
           },
           2200
         );
 
 
+        // Continue button
+
         setTimeout(
           () => {
-            continueBtn.classList.add(
-              'show'
-            );
+
+            if (continueBtn) {
+              continueBtn.classList.add(
+                'show'
+              );
+            }
+
           },
           3000
         );
 
 
+        // IMPORTANT:
+        // Firebase has already saved the data.
+        // Nothing else needs to be awaited.
+
+
       } catch (error) {
 
         console.error(
-          'Firebase save error:',
+          'Firebase error:',
           error
         );
 
 
         alert(
-          "Couldn't save your answers. Please check your internet connection and try again."
+          "Firebase error: " +
+          (error.code || error.message)
         );
 
 
@@ -862,7 +906,7 @@ console.log("Saved successfully");
     }
   );
 
-  </script>
 
+  </script>
 </body>
 </html>
