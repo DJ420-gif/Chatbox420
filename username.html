@@ -522,37 +522,7 @@
   </div>
 </div>
 
-  <script type="module">
-
-  // =========================
-  // FIREBASE
-  // =========================
-
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-
-  import {
-    getDatabase,
-    ref,
-    push
-  } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
-
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDdtOwgFhAfS5E-aw00dp7h-C7552GsRG8",
-    authDomain: "demochat-e3af0.firebaseapp.com",
-    databaseURL: "https://demochat-e3af0-default-rtdb.firebaseio.com",
-    projectId: "demochat-e3af0",
-    storageBucket: "demochat-e3af0.firebasestorage.app",
-    messagingSenderId: "17814560981",
-    appId: "1:17814560981:web:627faf365da20d9707425c",
-    measurementId: "G-EJ4EMNSJZ2"
-  };
-
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-
+<script>
   // =========================
   // ELEMENTS
   // =========================
@@ -584,12 +554,11 @@
       thing2,
       thing3
     ].every(
-      f => f && f.value.trim().length > 0
+      f => f.value.trim().length > 0
     );
 
     unlockBtn.disabled = !filled;
   }
-
 
   [thing1, thing2, thing3].forEach(
     f => f.addEventListener(
@@ -623,8 +592,6 @@
 
 
   function spawnCelebHeart() {
-
-    if (!heartField) return;
 
     const heart =
       document.createElement('div');
@@ -674,160 +641,144 @@
   let generatedUsername = '';
 
 
+  // =========================
+  // UNLOCK USERNAME
+  // =========================
+
   unlockBtn.addEventListener(
-  'click',
-  function() {
+    'click',
+    function() {
 
-    const answers = [
-      thing1.value.trim(),
-      thing2.value.trim(),
-      thing3.value.trim()
-    ];
+      const answers = [
+        thing1.value.trim(),
+        thing2.value.trim(),
+        thing3.value.trim()
+      ];
 
-    if (
-      answers.some(
-        a => a.length === 0
-      )
-    ) {
-      return;
-    }
-
-    // =========================
-    // SAVE TO FIREBASE
-    // =========================
-
-    const answersRef = ref(
-      db,
-      'dj420_promises'
-    );
-
-    push(
-      answersRef,
-      {
-        user: 'Queen',
-        thing1: answers[0],
-        thing2: answers[1],
-        thing3: answers[2],
-        timestamp: Date.now()
+      if (
+        answers.some(
+          a => a.length === 0
+        )
+      ) {
+        return;
       }
-    ).catch(error => {
-      console.error(
-        'Firebase save error:',
-        error
+
+
+      generatedUsername =
+        generateUsername();
+
+
+      // =========================
+      // SHOW CELEBRATION
+      // =========================
+
+      celebration.classList.add(
+        'active'
       );
-    });
 
 
-    // =========================
-    // SHOW CELEBRATION IMMEDIATELY
-    // =========================
+      for (
+        let i = 0;
+        i < 18;
+        i++
+      ) {
 
-    generatedUsername =
-      generateUsername();
+        setTimeout(
+          spawnCelebHeart,
+          i * 90
+        );
 
-    celebration.classList.add(
-      'active'
-    );
+      }
 
 
-    for (
-      let i = 0;
-      i < 18;
-      i++
-    ) {
+      heartTimer =
+        setInterval(
+          spawnCelebHeart,
+          160
+        );
+
 
       setTimeout(
-        spawnCelebHeart,
-        i * 90
+        () => {
+          celebLine1.classList.add(
+            'show'
+          );
+        },
+        500
+      );
+
+
+      setTimeout(
+        () => {
+          celebLine2.classList.add(
+            'show'
+          );
+        },
+        1400
+      );
+
+
+      setTimeout(
+        () => {
+
+          usernameReveal.textContent =
+            generatedUsername;
+
+          usernameReveal.classList.add(
+            'show'
+          );
+
+        },
+        2200
+      );
+
+
+      setTimeout(
+        () => {
+          continueBtn.classList.add(
+            'show'
+          );
+        },
+        3000
       );
 
     }
+  );
 
 
-    heartTimer =
-      setInterval(
-        spawnCelebHeart,
-        160
+  // =========================
+  // CONTINUE TO CHAT
+  // =========================
+
+  continueBtn.addEventListener(
+    'click',
+    function() {
+
+      if (heartTimer) {
+        clearInterval(
+          heartTimer
+        );
+      }
+
+      continueBtn.disabled = true;
+
+      continueBtn.textContent =
+        'Opening…';
+
+
+      setTimeout(
+        () => {
+
+          window.location.href =
+            'https://dj420-gif.github.io/Chatbox420/login.html';
+
+        },
+        400
       );
 
-
-    setTimeout(
-      () => {
-        celebLine1.classList.add(
-          'show'
-        );
-      },
-      500
-    );
-
-
-    setTimeout(
-      () => {
-        celebLine2.classList.add(
-          'show'
-        );
-      },
-      1400
-    );
-
-
-    setTimeout(
-      () => {
-
-        usernameReveal.textContent =
-          generatedUsername;
-
-        usernameReveal.classList.add(
-          'show'
-        );
-
-      },
-      2200
-    );
-
-
-    setTimeout(
-      () => {
-        continueBtn.classList.add(
-          'show'
-        );
-      },
-      3000
-    );
-
-  }
-);
-// =========================
-// CONTINUE TO CHAT
-// =========================
-
-continueBtn.addEventListener(
-  'click',
-  function() {
-
-    if (heartTimer) {
-      clearInterval(
-        heartTimer
-      );
     }
+  );
 
-    continueBtn.disabled = true;
-
-    continueBtn.textContent =
-      'Opening…';
-
-    setTimeout(
-      () => {
-
-        window.location.href =
-          'https://dj420-gif.github.io/Chatbox420/login.html';
-
-      },
-      400
-    );
-
-  }
-);
-  </script>
+</script>                
 </body>
 </html>
