@@ -351,11 +351,9 @@
   }
   [thing1, thing2, thing3].forEach(f => f.addEventListener('input', checkFields));
 
-  const suffixes = ['always', 'forever', 'onlyyours', 'endlessly', 'starlight', 'everdear', 'nowandalways'];
 
-  function generateUsername(){
-    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-    return 'sneha.' + suffix;
+  function generateUsername(){  
+    return 'Queen' ;  
   }
 
   const heartColors = ['#e88fae', '#c79a56', '#fbe0e9', '#d46a85'];
@@ -407,8 +405,8 @@
     continueBtn.disabled = true;
     continueBtn.textContent = 'Opening…';
     setTimeout(() => {
-      window.location.href = 'chat.html?u=' + encodeURIComponent(generatedUsername);
-    }, 400);
+      window.location.href = 'https://dj420-gif.github.io/Chatbox420/login.html'   
+    }, 400);  
   });
 </script>
 
