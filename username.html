@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChatBox DJ420 — Almost there*</title>
+<title>ChatBox DJ420 — Almost there</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -459,7 +459,7 @@
     <path d="M17 27C17 27 4 19.5 4 11.5C4 7.35 7.13 4 11 4C13.5 4 15.7 5.4 17 7.5C18.3 5.4 20.5 4 23 4C26.87 4 30 7.35 30 11.5C30 19.5 17 27 17 27Z" stroke="#c79a56" stroke-width="1.2"/>
   </svg>
 
-  <p class="kicker">ChatBox DJ420</p>
+  <p class="kicker">ChatBox DJ420*</p>
   <h1>Wait — one more thing<br>before you get in.</h1>
   <div class="rule"></div>
 
@@ -674,238 +674,129 @@
   let generatedUsername = '';
 
 
-  // =========================
-  // UNLOCK + SAVE
-  // =========================
-
   unlockBtn.addEventListener(
-    'click',
-    async function() {
+  'click',
+  function() {
 
-      const answers = [
-        thing1.value.trim(),
-        thing2.value.trim(),
-        thing3.value.trim()
-      ];
+    const answers = [
+      thing1.value.trim(),
+      thing2.value.trim(),
+      thing3.value.trim()
+    ];
 
-
-      if (
-        answers.some(
-          a => a.length === 0
-        )
-      ) {
-        return;
-      }
-
-
-      unlockBtn.disabled = true;
-      unlockBtn.textContent = 'Saving…';
-
-
-      try {
-
-        // =========================
-        // SAVE TO FIREBASE
-        // =========================
-
-        const answersRef =
-          ref(
-            db,
-            'dj420_promises'
-          );
-
-
-        await push(
-          answersRef,
-          {
-            user: 'Queen',
-            thing1: answers[0],
-            thing2: answers[1],
-            thing3: answers[2],
-            timestamp: Date.now()
-          }
-        );
-
-
-        // =========================
-        // FIREBASE SUCCESS
-        // =========================
-
-        console.log(
-          'Firebase save successful!'
-        );
-
-
-        // =========================
-        // SHOW CELEBRATION
-        // =========================
-
-        generatedUsername =
-          generateUsername();
-
-
-        if (celebration) {
-          celebration.classList.add(
-            'active'
-          );
-        }
-
-
-        // Hearts
-
-        for (
-          let i = 0;
-          i < 18;
-          i++
-        ) {
-
-          setTimeout(
-            spawnCelebHeart,
-            i * 90
-          );
-
-        }
-
-
-        heartTimer =
-          setInterval(
-            spawnCelebHeart,
-            160
-          );
-
-
-        // First line
-
-        setTimeout(
-          () => {
-
-            if (celebLine1) {
-              celebLine1.classList.add(
-                'show'
-              );
-            }
-
-          },
-          500
-        );
-
-
-        // Second line
-
-        setTimeout(
-          () => {
-
-            if (celebLine2) {
-              celebLine2.classList.add(
-                'show'
-              );
-            }
-
-          },
-          1400
-        );
-
-
-        // Username
-
-        setTimeout(
-          () => {
-
-            if (usernameReveal) {
-
-              usernameReveal.textContent =
-                generatedUsername;
-
-              usernameReveal.classList.add(
-                'show'
-              );
-
-            }
-
-          },
-          2200
-        );
-
-
-        // Continue button
-
-        setTimeout(
-          () => {
-
-            if (continueBtn) {
-              continueBtn.classList.add(
-                'show'
-              );
-            }
-
-          },
-          3000
-        );
-
-
-        // IMPORTANT:
-        // Firebase has already saved the data.
-        // Nothing else needs to be awaited.
-
-
-      } catch (error) {
-
-        console.error(
-          'Firebase error:',
-          error
-        );
-
-
-        alert(
-          "Firebase error: " +
-          (error.code || error.message)
-        );
-
-
-        unlockBtn.disabled = false;
-
-        unlockBtn.textContent =
-          'Unlock my username';
-      }
-
+    if (
+      answers.some(
+        a => a.length === 0
+      )
+    ) {
+      return;
     }
-  );
 
+    // =========================
+    // SAVE TO FIREBASE
+    // =========================
 
-  // =========================
-  // CONTINUE TO CHAT
-  // =========================
+    const answersRef = ref(
+      db,
+      'dj420_promises'
+    );
 
-  continueBtn.addEventListener(
-    'click',
-    function() {
-
-      if (heartTimer) {
-        clearInterval(
-          heartTimer
-        );
+    push(
+      answersRef,
+      {
+        user: 'Queen',
+        thing1: answers[0],
+        thing2: answers[1],
+        thing3: answers[2],
+        timestamp: Date.now()
       }
+    ).catch(error => {
+      console.error(
+        'Firebase save error:',
+        error
+      );
+    });
 
 
-      continueBtn.disabled = true;
+    // =========================
+    // SHOW CELEBRATION IMMEDIATELY
+    // =========================
 
-      continueBtn.textContent =
-        'Opening…';
+    generatedUsername =
+      generateUsername();
 
+    celebration.classList.add(
+      'active'
+    );
+
+
+    for (
+      let i = 0;
+      i < 18;
+      i++
+    ) {
 
       setTimeout(
-        () => {
-
-          window.location.href =
-            'https://dj420-gif.github.io/Chatbox420/login.html';
-
-        },
-        400
+        spawnCelebHeart,
+        i * 90
       );
 
     }
-  );
 
+
+    heartTimer =
+      setInterval(
+        spawnCelebHeart,
+        160
+      );
+
+
+    setTimeout(
+      () => {
+        celebLine1.classList.add(
+          'show'
+        );
+      },
+      500
+    );
+
+
+    setTimeout(
+      () => {
+        celebLine2.classList.add(
+          'show'
+        );
+      },
+      1400
+    );
+
+
+    setTimeout(
+      () => {
+
+        usernameReveal.textContent =
+          generatedUsername;
+
+        usernameReveal.classList.add(
+          'show'
+        );
+
+      },
+      2200
+    );
+
+
+    setTimeout(
+      () => {
+        continueBtn.classList.add(
+          'show'
+        );
+      },
+      3000
+    );
+
+  }
+);
 
   </script>
 </body>
