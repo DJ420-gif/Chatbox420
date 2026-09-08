@@ -797,7 +797,37 @@
 
   }
 );
+// =========================
+// CONTINUE TO CHAT
+// =========================
 
+continueBtn.addEventListener(
+  'click',
+  function() {
+
+    if (heartTimer) {
+      clearInterval(
+        heartTimer
+      );
+    }
+
+    continueBtn.disabled = true;
+
+    continueBtn.textContent =
+      'Opening…';
+
+    setTimeout(
+      () => {
+
+        window.location.href =
+          'https://dj420-gif.github.io/Chatbox420/login.html';
+
+      },
+      400
+    );
+
+  }
+);
   </script>
 </body>
 </html>
